@@ -1,0 +1,32 @@
+.productListContainer {
+  margin: 3rem 0;
+
+  .productListTitle {
+    margin-top: 5rem;
+    text-align: center;
+  }
+
+  .productList {
+    div {
+      margin: 1rem;
+      cursor: pointer;
+    }
+  }
+}
+
+@media(min-width: 1024px) {
+  .productListContainer {
+
+    .productList {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      margin: 0 5rem;
+
+      div {
+        flex: 0 0 300px;
+      }
+    }
+  }
+}
