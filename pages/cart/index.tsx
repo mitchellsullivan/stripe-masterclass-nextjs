@@ -4,9 +4,12 @@ import CartItem from '../../components/cart/cart-item';
 import Total from "../../components/cart/total";
 import {NextPage} from "next";
 import NoSsrWrapper from "../../components/no-ssr-wrapper";
+import {useSession} from "next-auth/react";
 
 
 const CartPage: NextPage = () => {
+  const session = useSession();
+
   const {
     cartItems,
     itemCount,

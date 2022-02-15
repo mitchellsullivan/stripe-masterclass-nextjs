@@ -2,11 +2,13 @@ import Link from "next/link";
 
 import CartIcon from '../cart-icon/cart-icon';
 import classes from './header.module.scss';
-import {FC, useContext} from "react";
-import {CartContext} from "../../context/cart-context";
+import {FC} from "react";
+import {useSession, signIn, signOut } from "next-auth/react";
+import {useRouter} from "next/router";
 
 const Header: FC = () => {
-  const {itemCount} = useContext(CartContext);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   return (
     <nav className={`${classes.navMenu} container`}>
@@ -24,8 +26,22 @@ const Header: FC = () => {
             Shop
           </Link>
         </li>
+        {
+          !session &&
+            <li onClick={() => signIn("auth0")}>
+                Sign In
+            </li>
+        }
+        {
+          session &&
+            <li onClick={() => signOut({
+              callbackUrl: "/api/auth/logout-auth0",
+            })}>
+                Sign Out
+            </li>
+        }
       </ul>
-      <CartIcon itemCount={itemCount} />
+      <CartIcon />
     </nav>
   );
 }

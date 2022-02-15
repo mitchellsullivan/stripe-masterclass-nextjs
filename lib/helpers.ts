@@ -1,8 +1,10 @@
+import {RequestInit} from "next/dist/server/web/spec-extension/request";
+
 export const isInCart = (product, cartItems) => {
   return cartItems.find(item => item.id === product.id);
 }
 
-export async function fetchFromAPI(endpoint, opts) {
+export async function fetchFromAPI(endpoint: string, opts: any = {}) {
   const method = "POST";
 
   if (opts.body) {

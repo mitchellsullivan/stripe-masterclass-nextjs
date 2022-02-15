@@ -91,17 +91,6 @@ export function cartReducer(state: CartState, action: CartAction) {
         total: 0,
       }
 
-    // case CartActionKind.LOAD_STORED_CART: {
-    //   const cartItems: ShopProduct[] = localStorage.getItem('cart') ?
-    //     JSON.parse(localStorage.getItem('cart')) :
-    //     [];
-    //
-    //   return {
-    //     ...state,
-    //     cartItems,
-    //     ...sumItems(cartItems)
-    //   }
-    // }
     default:
       return state;
   }
