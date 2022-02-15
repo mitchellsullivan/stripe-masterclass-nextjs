@@ -3,11 +3,11 @@ import Link from "next/link";
 import CartIcon from '../cart-icon/cart-icon';
 import classes from './header.module.scss';
 import {FC} from "react";
-import {useSession, signIn, signOut } from "next-auth/react";
 import {useRouter} from "next/router";
+import {useAuth} from "../../context/auth-context";
 
 const Header: FC = () => {
-  const { data: session } = useSession();
+  const { user, signIn, signOut } = useAuth();
   const router = useRouter();
 
   return (
@@ -27,16 +27,24 @@ const Header: FC = () => {
           </Link>
         </li>
         {
-          !session &&
-            <li onClick={() => signIn("auth0")}>
-                Sign In
+          !user &&
+            <li>
+                <Link href={"/sign-in"}>
+                    Sign In
+                </Link>
             </li>
         }
         {
-          session &&
-            <li onClick={() => signOut({
-              callbackUrl: "/api/auth/logout-auth0",
-            })}>
+          !user &&
+            <li>
+                <Link href={"/sign-up"}>
+                    Sign Up
+                </Link>
+            </li>
+        }
+        {
+          user &&
+            <li onClick={() => signOut()}>
                 Sign Out
             </li>
         }
