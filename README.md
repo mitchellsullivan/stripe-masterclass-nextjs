@@ -83,3 +83,19 @@ export default function handler(req, res) {
   );
 }
 ```
+
+- CSS modules are clunky with hyphenated class names. My IDE autocompleted 
+hyphenated classes as camel-case, so I assumed that the conversion was being made 
+automatically, and things did not work. You can refer to a hyphenated class
+as a string key on the import. 
+```typescript jsx
+import classes from "./foo.module.css";
+
+// can only refer to hyphenated as key 
+<div className={classes["my-hyphenated-class"]}/>
+
+// can refer to camel case two ways 
+<div className={classes.myCamelCaseClass}/>
+// or
+<div className={classes["myCamelCaseClass"]}/>
+```
