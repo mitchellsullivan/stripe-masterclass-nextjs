@@ -1,11 +1,12 @@
 ### Goal 
 
-This project is for learning purposes, and the goal to convert the code for the Udemy course
+This project is for learning purposes, and the goal is to convert the code for the Udemy course
 "Stripe Masterclass with React.js and Node.js" to Next.js with TypeScript.
 
 The original course's code can be found at in the following repos:
 
 https://github.com/cagarweyne/stripe-masterclass
+<br/>
 https://github.com/cagarweyne/stripe-masterclass-server
 
 The Firebase SDK is changed from 8 to 9. Most resources and tutorials for 
