@@ -43,7 +43,7 @@ with popular `next-auth` package.
   Sign Out
 </li>
 
-// In pages/api/logout-auth0.ts, redirect to logout API:
+// In pages/api/auth/logout-auth0.ts, redirect to logout API:
 export default function handler(req, res) {
   const returnTo = encodeURI('http://localhost:3000');
   res.redirect(

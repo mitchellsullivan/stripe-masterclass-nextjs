@@ -28,11 +28,12 @@ export const AuthContextProvider = ({ children }) => {
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
 
-const useAuthProvider = () => {
+export const useAuthProvider = () => {
   let firebaseApp;
   if (!getApps().length) {
     firebaseApp = initializeApp(config);
   }
+
   const auth = getAuth(firebaseApp);
 
   const db = getFirestore(firebaseApp);
@@ -58,7 +59,7 @@ const useAuthProvider = () => {
     await signInWithEmailAndPassword(auth, email, password);
   };
 
-  const signUp = async (email, password) => {
+  const signUp = async (email, password, displayName) => {
 
     const usersRef = collection(db, "users");
 
@@ -68,10 +69,11 @@ const useAuthProvider = () => {
       password
     );
 
-    await addDoc(usersRef, { // adds new user to 'users' collection
+    await addDoc(usersRef, {
       uuid: response.user.uid,
       timestamp: Timestamp.now(),
       email,
+      displayName
     });
   };
 

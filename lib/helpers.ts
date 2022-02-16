@@ -1,4 +1,5 @@
 import {RequestInit} from "next/dist/server/web/spec-extension/request";
+import {useAuthProvider} from "../context/auth-context";
 
 export const isInCart = (product, cartItems) => {
   return cartItems.find(item => item.id === product.id);
@@ -10,6 +11,7 @@ export async function fetchFromAPI(endpoint: string, opts: any = {}) {
   if (opts.body) {
     opts.body = JSON.stringify(opts.body);
   }
+
 
   // const user = auth.currentUser;
   // const token = user && (await user.getIdToken());
