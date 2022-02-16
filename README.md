@@ -84,10 +84,16 @@ export default function handler(req, res) {
 }
 ```
 
-- CSS modules are clunky with hyphenated class names. My IDE autocompleted 
-hyphenated classes as camel-case, so I assumed that the conversion was being made 
-automatically, and things did not work. You can refer to a hyphenated class
-as a string key on the import. 
+- CSS modules quirks.
+  - Classes defined inside of `@media` queries needed to have a definition outside
+  the query block, as well. They weren't detected by WebStorm otherwise. 
+  TODO: Check if this is IDE-only or part of Next.
+  - Modules are clunky with hyphenated class names. WebStorm autocompleted 
+  hyphenated classes as camel-case, so I assumed that the conversion was being made 
+  automatically, and things were not working. You can refer to a hyphenated class
+  as a string key on the import, change your naming to camel case, or just use root
+  `/styles` folder **and** import in `_app.ts`.
+
 ```typescript jsx
 import classes from "./foo.module.css";
 
