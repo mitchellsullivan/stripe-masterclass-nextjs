@@ -26,8 +26,7 @@ https://github.com/official-carledwardfp/nextjs-firebase-auth-starter.git
   context provider within `useEffect`, but this results in duplicate code.
   - Instead, you can create a "No SSR" wrapper component and selectively surround 
   the specific logic within a component or page that relies on Context state.
-<br/>
-<br/>
+
 - Poor middleware support, uncharacteristic of a typical development experience with
   Express.
   - The new-ish `_middleware.ts` files are apparently only client-side. Trying
@@ -52,7 +51,6 @@ const protectedHandler: NextApiHandler = async (req, res) => {
 
 export default withAuth(handler); 
 ```
-  
   
 - Problems **fully** logging out of Oauth (specifically Auth0, possibly KeyCloak)
 with popular `next-auth` (v4) package. 
