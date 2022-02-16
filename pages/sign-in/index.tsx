@@ -30,6 +30,7 @@ const SignInPage: NextPage = (props) => {
     console.log('values', values);
     const {email, password} = values;
     try {
+
       //signin with firebase
       await auth.signIn(email, password);
       setSubmitting(false);
