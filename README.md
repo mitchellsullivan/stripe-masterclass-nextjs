@@ -39,8 +39,6 @@ https://github.com/official-carledwardfp/nextjs-firebase-auth-starter.git
   this template:
 
 ```typescript jsx
-import {NextApiHandler, NextApiRequest, NextApiResponse} from "next";
-
 function withAuth(handler: NextApiHandler) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     // ... do auth stuff ...
@@ -48,7 +46,7 @@ function withAuth(handler: NextApiHandler) {
   };
 }
 
-const handler: NextApiHandler = async (req, res) => {
+const protectedHandler: NextApiHandler = async (req, res) => {
   // ... handle stuff
 }
 
