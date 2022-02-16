@@ -2,7 +2,7 @@ import React, {useContext, useState, useEffect} from 'react';
 import classes from './single-product.module.scss';
 import {ShopProduct} from "../../lib/data-utils";
 import {CartContext} from "../../context/cart-context";
-import {isInCart} from "../../lib/helpers";
+import {isInCart} from "../../lib/client-helpers";
 import AddToCartButtons from "./add-to-cart-buttons";
 
 type SingleProductProps = {

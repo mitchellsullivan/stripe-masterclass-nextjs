@@ -1,5 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import stripeAPI from "../../lib/stripeAPI";
+import stripeApi from "../../lib/stripe-api";
 
 function calculateOrderAmount(cartItems) {
   return cartItems.reduce((total, product) => {
@@ -15,7 +15,7 @@ export default async function handler(
   let paymentIntent;
 
   try {
-    paymentIntent = await stripeAPI.paymentIntents.create({
+    paymentIntent = await stripeApi.paymentIntents.create({
       amount: calculateOrderAmount(cartItems),
       currency: 'usd',
       description,

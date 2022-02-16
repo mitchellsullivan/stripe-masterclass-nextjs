@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import classes from './featured-product.module.scss';
 import {useRouter} from "next/router";
 import {CartContext} from "../../context/cart-context";
-import {isInCart} from "../../lib/helpers";
+import {isInCart} from "../../lib/client-helpers";
 import {ShopProduct} from "../../lib/data-utils";
 import NoSsrWrapper from "../no-ssr-wrapper";
 

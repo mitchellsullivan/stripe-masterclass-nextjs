@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useStripe } from '@stripe/react-stripe-js';
 import { CartContext } from '../../context/cart-context';
-import { fetchFromAPI } from '../../lib/helpers';
+import { fetchFromAPI } from '../../lib/client-helpers';
 
 const StripeCheckout = () => {
   const [email, setEmail] = useState('');

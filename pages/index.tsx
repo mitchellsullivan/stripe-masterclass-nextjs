@@ -1,10 +1,11 @@
 import {GetStaticProps, NextPage} from "next";
 import {getFeaturedProducts, ShopProduct} from "../lib/data-utils";
-import {Fragment} from "react";
+import {Fragment, useEffect} from "react";
 import Header from "../components/layout/header";
 import FeaturedCollection from "../components/featured-collection/featured-collection";
 import Hero from "../components/hero/hero";
 import MainSection from "../components/main-section/main-section";
+import {fetchFromAPI} from "../lib/client-helpers";
 
 
 export type HomePageProps = {

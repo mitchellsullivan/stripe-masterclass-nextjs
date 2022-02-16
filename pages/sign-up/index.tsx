@@ -36,7 +36,7 @@ const SignUpPage: NextPage = (props) => {
     const {firstname, email, password} = values;
 
     try {
-      await auth.signUp(email, password);
+      await auth.signUp(email, password, firstname);
       await router.push('/shop');
       setSubmitting(false);
     } catch (error) {

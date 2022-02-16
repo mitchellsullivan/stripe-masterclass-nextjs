@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, createContext } from "react";
+import {useState, useEffect, useContext, createContext, FC} from "react";
 import { initializeApp, getApps } from "firebase/app";
 import {
   getAuth,
@@ -14,19 +14,27 @@ import {
   getFirestore,
   collection,
   addDoc,
-  Timestamp,
+  Timestamp, setDoc, doc,
 } from "firebase/firestore";
 
-import { config } from "./firebase";
+import { config } from "../firebase-config";
+import firebase from "firebase/compat";
+import App = firebase.app.App;
 
 const AuthContext = createContext(null);
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthContextProvider = ({ children }) => {
+export const AuthContextProvider: FC = ({ children }) => {
   const auth = useAuthProvider();
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={auth}>
+      {children}
+    </AuthContext.Provider>
+  )
 };
+
+export let FIREBASE_APP: App;
 
 export const useAuthProvider = () => {
   let firebaseApp;
@@ -69,11 +77,18 @@ export const useAuthProvider = () => {
       password
     );
 
-    await addDoc(usersRef, {
-      uuid: response.user.uid,
-      timestamp: Timestamp.now(),
-      email,
-      displayName
+    // await addDoc(usersRef, {
+    //   uuid: response.user.uid,
+    //   timestamp: Timestamp.now(),
+    //   email,
+    //   displayName
+    // });
+
+    await setDoc(doc(db, "users", response.user.uid), {
+        uuid: response.user.uid,
+        timestamp: Timestamp.now(),
+        email,
+        displayName
     });
   };
 

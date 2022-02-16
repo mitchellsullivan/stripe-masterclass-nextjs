@@ -1,15 +1,13 @@
-import React, {Fragment, useContext} from 'react';
+import React, {Fragment, useContext, useEffect} from 'react';
 import {CartContext, useCartContext} from '../../context/cart-context';
 import CartItem from '../../components/cart/cart-item';
 import Total from "../../components/cart/total";
 import {NextPage} from "next";
 import NoSsrWrapper from "../../components/no-ssr-wrapper";
-import {useSession} from "next-auth/react";
+import {fetchFromAPI} from "../../lib/client-helpers";
 
 
 const CartPage: NextPage = () => {
-  const session = useSession();
-
   const {
     cartItems,
     itemCount,

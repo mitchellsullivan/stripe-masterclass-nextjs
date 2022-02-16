@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   CardNumberElement,
   CardExpiryElement,
@@ -6,13 +6,17 @@ import {
   useStripe,
   useElements
 } from '@stripe/react-stripe-js';
-import { UserContext } from '../../context/user-context';
-import { fetchFromAPI } from '../../lib/helpers';
+import {useAuth} from '../../context/auth-context';
+import {fetchFromAPI} from '../../lib/client-helpers';
 import {useRouter} from "next/router";
 
-const CustomCheckout = ({ shipping, cartItems }) => {
+const CustomCheckout = ({shipping, cartItems}) => {
   const router = useRouter();
-  const { user } = useContext(UserContext);
+
+  const stripe = useStripe();
+  const elements = useElements();
+  const {user} = useAuth();
+
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
@@ -20,24 +24,23 @@ const CustomCheckout = ({ shipping, cartItems }) => {
   const [payment, setPaymentCard] = useState('');
   const [saveCard, setSavedCard] = useState(false);
   const [paymentIntentId, setPaymentIntentId] = useState(null);
-  const stripe = useStripe();
-  const elements = useElements();
 
   useEffect(() => {
-    const items = cartItems.map(item => ({price: item.price, quantity: item.quantity}));
+    const items = cartItems.map(item => ({
+      price: item.price,
+      quantity: item.quantity
+    }));
 
     if (user) {
-      const savedCards = async () => {
-        try {
-          const cardsList = await fetchFromAPI('get-payment-methods', {
-            method: 'GET',
-          });
-          setCards(cardsList);
-        } catch(error) {
-          console.log(error);
-        }
+      try {
+        fetchFromAPI('get-payment-methods', {
+          method: 'GET',
+        }).then(data => {
+          setCards(data);
+        });
+      } catch (error) {
+        console.log(error);
       }
-      savedCards();
     }
 
     if (shipping) {
@@ -53,18 +56,15 @@ const CustomCheckout = ({ shipping, cartItems }) => {
         receipt_email: shipping.email,
       }
 
-      const customCheckout = async () => {
-        const { clientSecret, id } = await fetchFromAPI('create-payment-intent', {
-          body
-        });
-
+      fetchFromAPI('create-payment-intent', {
+        body
+      }).then(({clientSecret, id}) => {
         setClientSecret(clientSecret)
         setPaymentIntentId(id);
-      }
-
-      customCheckout();
+      });
     }
   }, [shipping, cartItems]);
+
 
   const handleCheckout = async () => {
     setProcessing(true);
@@ -99,8 +99,9 @@ const CustomCheckout = ({ shipping, cartItems }) => {
 
   const savedCardCheckout = async () => {
     setProcessing(true);
-    // update the payment intent to incude the customer parameter
-    const { clientSecret } = await fetchFromAPI('update-payment-intent', {
+
+    // update the payment intent to include the customer parameter
+    const {clientSecret} = await fetchFromAPI('update-payment-intent', {
       body: {
         paymentIntentId
       },
@@ -120,8 +121,8 @@ const CustomCheckout = ({ shipping, cartItems }) => {
   }
 
   const cardHandleChange = event => {
-    const { error } = event;
-    setError(error ? error.message: '');
+    const {error} = event;
+    setError(error ? error.message : '');
   }
 
   const cardStyle = {
@@ -146,10 +147,10 @@ const CustomCheckout = ({ shipping, cartItems }) => {
 
   if (cards) {
     cardOption = cards.map(card => {
-      const { card: { brand, last4, exp_month, exp_year } } = card;
+      const {card: {brand, last4, exp_month, exp_year}} = card;
       return (
         <option key={card.id} value={card.id}>
-          { `${brand}/ **** **** **** ${last4} ${exp_month}/${exp_year}` }
+          {`${brand}/ **** **** **** ${last4} ${exp_month}/${exp_year}`}
         </option>
       );
     });
@@ -162,20 +163,20 @@ const CustomCheckout = ({ shipping, cartItems }) => {
     <div>
       {
         user && (cards && cards.length > 0) &&
-        <div>
-          <h4>Pay with saved card</h4>
-          <select value={payment} onChange={e => setPaymentCard(e.target.value)}>
-            { cardOption }
-          </select>
-          <button
-            type='submit'
-            disabled={processing || !payment}
-            className='button is-black nomad-btn submit saved-card-btn'
-            onClick={() => savedCardCheckout()}
-          >
-          { processing ? 'PROCESSING' : 'PAY WITH SAVED CARD' }
-          </button>
-        </div>
+          <div>
+              <h4>Pay with saved card</h4>
+              <select value={payment} onChange={e => setPaymentCard(e.target.value)}>
+                {cardOption}
+              </select>
+              <button
+                  type='submit'
+                  disabled={processing || !payment}
+                  className='button is-black nomad-btn submit saved-card-btn'
+                  onClick={() => savedCardCheckout()}
+              >
+                {processing ? 'PROCESSING' : 'PAY WITH SAVED CARD'}
+              </button>
+          </div>
       }
       <h4>Enter Payment Details</h4>
       <div className='stripe-card'>
@@ -201,14 +202,14 @@ const CustomCheckout = ({ shipping, cartItems }) => {
       </div>
       {
         user &&
-        <div className='save-card'>
-          <label>Save Card</label>
-          <input
-            type='checkbox'
-            checked={saveCard}
-            onChange={e => setSavedCard(e.target.checked)}
-          />
-        </div>
+          <div className='save-card'>
+              <label>Save Card</label>
+              <input
+                  type='checkbox'
+                  checked={saveCard}
+                  onChange={e => setSavedCard(e.target.checked)}
+              />
+          </div>
       }
       <div className='submit-btn'>
         <button
@@ -216,7 +217,7 @@ const CustomCheckout = ({ shipping, cartItems }) => {
           className='button is-black nomad-btn submit'
           onClick={() => handleCheckout()}
         >
-          { processing ? 'PROCESSING' : 'PAY' }
+          {processing ? 'PROCESSING' : 'PAY'}
         </button>
       </div>
       {

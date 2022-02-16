@@ -2,7 +2,7 @@ import classes from "./single-product.module.scss";
 import React, {useContext} from "react";
 import NoSsrWrapper from "../no-ssr-wrapper";
 import {CartContext} from "../../context/cart-context";
-import {isInCart} from "../../lib/helpers";
+import {isInCart} from "../../lib/client-helpers";
 
 
 const AddToCartButtons: React.FC<any> = ({ product }) => {

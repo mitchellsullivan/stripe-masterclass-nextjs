@@ -16,7 +16,7 @@ Inspiration was found here:
 https://github.com/official-carledwardfp/nextjs-firebase-auth-starter.git
 
 ### Findings 
-- Client-Server mismatch. 
+- Client-server mismatch warnings. 
   - Any rendering logic that relies on state from React's Context API still works,
   but will throw warnings in the console about a mismatch between the client and 
   server. 
@@ -26,10 +26,38 @@ https://github.com/official-carledwardfp/nextjs-firebase-auth-starter.git
   context provider within `useEffect`, but this results in duplicate code.
   - Instead, you can create a "No SSR" wrapper component and selectively surround 
   the specific logic within a component or page that relies on Context state.
+<br/>
+<br/>
+- Poor middleware support, uncharacteristic of a typical development experience with
+  Express.
+  - The new-ish `_middleware.ts` files are apparently only client-side. Trying
+  to access the firebase-admin SDK within this file, even within my api directory,
+  caused the app to scream about missing Node.js packages like `fs` and `http2`.
+  - Eventual middleware-containing files can't be placed alongside API code due
+  to file-based routing and its being a non-route, utility file.
+  - To create server-side middleware, one must do so rather manually following 
+  this template:
 
-    
+```typescript jsx
+import {NextApiHandler, NextApiRequest, NextApiResponse} from "next";
+
+function withAuth(handler: NextApiHandler) {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    // ... do auth stuff ...
+    return handler(req, res);
+  };
+}
+
+const handler: NextApiHandler = async (req, res) => {
+  // ... handle stuff
+}
+
+export default withAuth(handler); 
+```
+  
+  
 - Problems **fully** logging out of Oauth (specifically Auth0, possibly KeyCloak)
-with popular `next-auth` package. 
+with popular `next-auth` (v4) package. 
   - I tried Oauth instead of Firebase just for fun. Signing out followed by 
   clicking a Sign In link would sign me back in without a challenge. 
   - Next Auth's `signOut` function wasn't calling the Auth0's `logout` API to 
@@ -39,15 +67,23 @@ with popular `next-auth` package.
 
 ```typescript jsx
 // In component, add callback URL of custom handler:
-<li onClick={() => signOut({ callbackUrl: "/api/logout-auth0"})}>
+import { signOut } from "next-auth/client";
+
+<li onClick={() => signOut({ 
+  callbackUrl: "/api/auth/logout-auth0"
+})}>
   Sign Out
 </li>
+```
 
+```typescript
 // In pages/api/auth/logout-auth0.ts, redirect to logout API:
 export default function handler(req, res) {
   const returnTo = encodeURI('http://localhost:3000');
   res.redirect(
-    `${process.env.AUTH0_ISSUER}/v2/logout?returnTo=${returnTo}&client_id=${process.env["AUTH0_CLIENT_ID"]}`,
+    `${process.env.AUTH0_ISSUER}/v2/logout` +
+    `?returnTo=${returnTo}` + 
+    `&client_id=${process.env["AUTH0_CLIENT_ID"]}`,
   );
 }
 ```
